@@ -62,10 +62,9 @@ public class InscripcionService {
         inscripcion.setCurso(curso);
         inscripcion.setEstudiante(estudiante);
         inscripcionRepo.save(inscripcion);
-
-        // Actualizar contador
+        
         curso.incrementarInscritos();
-        cursoRepo.save(curso);
+        cursoRepo.saveAndFlush(curso);
 
         return new GenericResponse<>(200, "Inscripción realizada con éxito.", inscripcion);
     }

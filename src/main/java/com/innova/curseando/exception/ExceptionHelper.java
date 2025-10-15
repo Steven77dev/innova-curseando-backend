@@ -55,7 +55,7 @@ public class ExceptionHelper  {
     @ExceptionHandler(OptimisticLockingFailureException.class)
     public ResponseEntity<GenericResponse<?>> handleOptimisticLock(OptimisticLockingFailureException ex) {
         logger.error("OptimisticLockingFailureException {}", ex.getMessage());
-        GenericResponse<?> response = new GenericResponse<>(-1, "Conflicto de concurrencia: intente nuevamente", null);
+        GenericResponse<?> response = new GenericResponse<>(-1, "Lo sentimos, otra persona se inscribió antes que tú y el curso ya no tiene cupos. Intenta nuevamente.", null);
         return ResponseEntity.status(409).body(response);
     }
 

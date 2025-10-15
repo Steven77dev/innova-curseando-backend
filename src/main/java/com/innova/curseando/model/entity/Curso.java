@@ -1,8 +1,7 @@
 package com.innova.curseando.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,10 +21,13 @@ public class Curso {
     private String instructor;
     private Integer duracion;
     private String nivel; // "principiante", "intermedio", "avanzado"
-    private Integer capacidad;
+    @Column(nullable = false)
+    private Integer capacidad = 0;
+    @Column(nullable = false)
     private Integer inscritos = 0;
 
     @Version
+    @Setter(AccessLevel.NONE)
     private Long version;
 
     public Integer getDisponibles(){
