@@ -1,6 +1,6 @@
 package com.innova.curseando.repository;
 
-import com.innova.curseando.model.Curso;
+import com.innova.curseando.model.entity.Curso;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

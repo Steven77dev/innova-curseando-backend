@@ -2,7 +2,7 @@ package com.innova.curseando.service;
 
 import com.innova.curseando.dto.CursoDTO;
 import com.innova.curseando.dto.DetalleCursoDTO;
-import com.innova.curseando.model.Curso;
+import com.innova.curseando.model.entity.Curso;
 import com.innova.curseando.repository.CursoRepository;
 import com.innova.curseando.util.EnumNiveles;
 import jakarta.persistence.EntityNotFoundException;
@@ -51,6 +51,7 @@ public class CursoService {
     @Transactional
     public CursoDTO inscribir(Long id) {
         Curso curso = cursoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Curso no encontrado"));
+
         if (curso.getInscritos() >= curso.getCapacidad()) {
             throw new IllegalStateException("El curso está lleno");
         }
