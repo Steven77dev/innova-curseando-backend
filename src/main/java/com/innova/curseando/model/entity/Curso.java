@@ -1,15 +1,13 @@
 package com.innova.curseando.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "CURSO")
 public class Curso {
@@ -26,8 +24,7 @@ public class Curso {
     @Column(nullable = false)
     private Integer inscritos = 0;
 
-    @Version
-    @Setter(AccessLevel.NONE)
+    //@Version
     private Long version;
 
     public Integer getDisponibles(){

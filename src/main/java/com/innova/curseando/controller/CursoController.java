@@ -5,10 +5,9 @@ import com.innova.curseando.dto.DetalleCursoDTO;
 import com.innova.curseando.dto.GenericResponse;
 import com.innova.curseando.service.CursoService;
 import com.innova.curseando.util.ApiResponse;
-import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 
@@ -16,11 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cursos")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class CursoController {
     private final CursoService service;
-
-    public CursoController(CursoService service) { this.service = service; }
-
 
     @GetMapping
     public ResponseEntity<GenericResponse<List<CursoDTO>>> listar(@RequestParam(value = "nivel", required = false) Integer nivel) {

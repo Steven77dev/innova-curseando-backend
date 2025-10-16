@@ -6,6 +6,7 @@ import com.innova.curseando.model.entity.Curso;
 import com.innova.curseando.repository.CursoRepository;
 import com.innova.curseando.util.EnumNiveles;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CursoService {
     private final CursoRepository cursoRepository;
-
-
-    public CursoService(CursoRepository cursoRepository) { this.cursoRepository = cursoRepository; }
 
     public List<CursoDTO> listar(Integer nivelCodigo) {
         List<CursoDTO> cursos;
@@ -36,17 +35,14 @@ public class CursoService {
         return cursoRepository.findAll().stream().map(this::toDto).collect(Collectors.toList());
     }
 
-
     private List<CursoDTO> filtrarPorNivel(String nivel) {
         return cursoRepository.findByNivelIgnoreCase(nivel).stream().map(this::toDto).collect(Collectors.toList());
     }
-
 
     public DetalleCursoDTO obtener(Long id) {
         Curso c = cursoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Curso no encontrado"));
         return detalleToDto(c);
     }
-
 
     @Transactional
     public CursoDTO inscribir(Long id) {
