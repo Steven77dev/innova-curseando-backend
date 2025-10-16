@@ -14,10 +14,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class InscripcionRequest {
 
-    @NotBlank
+    @NotBlank(message = "El nombre no debe estar vacío")
     private String nombreCompleto;
-    @Email
-    @NotBlank
+
+    @Email(message = "Debe ingresar un correo válido")
+    @NotBlank(message = "El correo no debe estar vacío")
     private String email;
     @NotNull(message = "El ID del curso es obligatorio")
     private Long idCurso;

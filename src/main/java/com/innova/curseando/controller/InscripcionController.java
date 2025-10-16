@@ -19,15 +19,11 @@ public class InscripcionController {
 
     @PostMapping
     public ResponseEntity<GenericResponse<Inscripcion>> inscribir(@Valid @RequestBody InscripcionRequest request) {
-
         GenericResponse<Inscripcion> response = inscripcionService.inscribir(
                 request.getNombreCompleto(),
                 request.getEmail(),
                 request.getIdCurso()
         );
-
         return ResponseEntity.ok(response);
-
-
     }
 }

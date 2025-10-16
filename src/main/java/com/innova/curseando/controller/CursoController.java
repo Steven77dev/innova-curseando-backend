@@ -32,10 +32,4 @@ public class CursoController {
         return ApiResponse.ok(dto, "Detalle del curso");
     }
 
-
-    @PostMapping("/{id}/inscribir")
-    public ResponseEntity<GenericResponse<CursoDTO>> inscribir(@PathVariable Long id) {
-        CursoDTO actualizado = service.inscribir(id);
-        return ApiResponse.ok(actualizado, "Inscripción realizada");
-    }
 }

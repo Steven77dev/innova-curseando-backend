@@ -44,18 +44,6 @@ public class CursoService {
         return detalleToDto(c);
     }
 
-    @Transactional
-    public CursoDTO inscribir(Long id) {
-        Curso curso = cursoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Curso no encontrado"));
-
-        if (curso.getInscritos() >= curso.getCapacidad()) {
-            throw new IllegalStateException("El curso está lleno");
-        }
-        curso.setInscritos(curso.getInscritos() + 1);
-        Curso guardado = cursoRepository.save(curso);
-        return toDto(guardado);
-    }
-
 
     private CursoDTO toDto(Curso c) {
         return new CursoDTO(

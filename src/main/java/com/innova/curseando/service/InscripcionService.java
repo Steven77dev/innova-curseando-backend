@@ -23,29 +23,22 @@ public class InscripcionService {
 
     @Transactional
     public GenericResponse<Inscripcion> inscribir(String nombreCompleto, String email, Long idCurso) {
+        if (esCampoVacio(nombreCompleto) || esCampoVacio(email)) {
+            return new GenericResponse<>(-1, "Todos los campos son obligatorios.", null);
+        }
+
         try {
-            if (nombreCompleto == null || nombreCompleto.isBlank() || email == null || email.isBlank()) {
-                return new GenericResponse<>(-1, "Todos los campos son obligatorios.", null);
-            }
 
             Curso curso = cursoRepo.findByIdForUpdate(idCurso).orElse(null);
             if (curso == null) {
                 return new GenericResponse<>(-1, "Curso no encontrado.", null);
             }
 
-
             if (!curso.hayCupos()) {
                 return new GenericResponse<>(-1, "El curso no tiene cupos disponibles.", null);
             }
 
-            // Buscar o crear estudiante
-            Estudiante estudiante = estudianteRepo.findByEmail(email)
-                    .orElseGet(() -> {
-                        Estudiante e = new Estudiante();
-                        e.setNombreCompleto(nombreCompleto);
-                        e.setEmail(email);
-                        return estudianteRepo.save(e);
-                    });
+            Estudiante estudiante = obtenerORegistrarEstudiante(nombreCompleto, email);
 
             // Verificar si ya está inscrito
             boolean yaInscrito = inscripcionRepo.existsByCursoIdAndEstudianteId(curso.getId(), estudiante.getId());
@@ -53,18 +46,38 @@ public class InscripcionService {
                 return new GenericResponse<>(-1, "El estudiante ya está inscrito en este curso.", null);
             }
 
-            // Crear inscripción
-            Inscripcion inscripcion = new Inscripcion();
-            inscripcion.setCurso(curso);
-            inscripcion.setEstudiante(estudiante);
-            inscripcionRepo.save(inscripcion);
-
-            curso.incrementarInscritos();
-            cursoRepo.saveAndFlush(curso);
+            Inscripcion inscripcion = registrarInscripcion(curso, estudiante);
+            actualizarCupos(curso);
 
             return new GenericResponse<>(200, "Inscripción realizada con éxito.", inscripcion);
         } catch (ObjectOptimisticLockingFailureException | OptimisticLockException e) {
             return new GenericResponse<>(-1, "Otro usuario está inscribiendo al mismo tiempo. Intente nuevamente.", null);
         }
+    }
+
+    private boolean esCampoVacio(String valor) {
+        return valor == null || valor.isBlank();
+    }
+
+    private Estudiante obtenerORegistrarEstudiante(String nombreCompleto, String email) {
+        return estudianteRepo.findByEmail(email)
+                .orElseGet(() -> {
+                    Estudiante nuevo = new Estudiante();
+                    nuevo.setNombreCompleto(nombreCompleto);
+                    nuevo.setEmail(email);
+                    return estudianteRepo.save(nuevo);
+                });
+    }
+
+    private Inscripcion registrarInscripcion(Curso curso, Estudiante estudiante) {
+        Inscripcion inscripcion = new Inscripcion();
+        inscripcion.setCurso(curso);
+        inscripcion.setEstudiante(estudiante);
+        return inscripcionRepo.save(inscripcion);
+    }
+
+    private void actualizarCupos(Curso curso) {
+        curso.incrementarInscritos();
+        cursoRepo.saveAndFlush(curso);
     }
 }
